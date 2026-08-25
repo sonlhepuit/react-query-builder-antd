@@ -1,0 +1,8 @@
+node_modules
+lib
+*package-lock*
+scripts/
+*.log
+yarn-error.log
+yarn-debug.log*
+npm-debug.log*
