@@ -10,7 +10,7 @@
   },
   "author": "Lê Hồng Sơn <sonlhepuit@gmail.com> (https://github.com/sonlhepuit)",
   "dependencies": {
-    "react-query-builder-antd-input": "file:.."
+    "react-query-builder-antd": "file:.."
   },
   "devDependencies": {}
 }

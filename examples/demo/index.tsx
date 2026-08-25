@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   Query, Builder, Utils,
   ImmutableTree, Config, BuilderProps, JsonTree, ActionMeta, Actions, DataType
-} from "react-query-builder-antd-input";
+} from "react-query-builder-antd";
 import throttle from "lodash/throttle";
 import loadConfig from "./config";
 import axios from "axios";

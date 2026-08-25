@@ -21,8 +21,8 @@
     "moduleResolution": "node",
     "baseUrl": "..",
     "paths": {
-      "react-query-builder-antd-input": ["modules"],
-      "react-query-builder-antd-input/*": ["modules/*"],
+      "react-query-builder-antd": ["modules"],
+      "react-query-builder-antd/*": ["modules/*"],
     },
     "skipLibCheck": true
   },

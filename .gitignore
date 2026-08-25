@@ -1,7 +1,10 @@
 node_modules
 lib
 scripts/*
+!scripts/build-npm.sh
 !scripts/check-package-content.js
+!scripts/check-hot.js
+!scripts/clean.sh
 **/package-lock.json
 !/package-lock.json
 *.log

@@ -1,4 +1,4 @@
-# react-query-builder-antd-input-demo-local
+# react-query-builder-antd-demo-local
 
 Demo app, uses local library with hot reload.  
 You can switch between AntDesign, Material_UI and vanilla widgets.  

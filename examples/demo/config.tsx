@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import {
   BasicConfig, BasicFuncs,
   Operators, Widgets, Fields, Config, Types, Conjunctions, Settings, LocaleSettings, Funcs,
-} from "react-query-builder-antd-input";
-import AntdConfig from "react-query-builder-antd-input/config/antd";
+} from "react-query-builder-antd";
+import AntdConfig from "react-query-builder-antd/config/antd";
 import { localizers } from "./localizers";
 
 const skinToConfig: Record<string, Config> = {

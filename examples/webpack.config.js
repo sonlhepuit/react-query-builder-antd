@@ -7,7 +7,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 
 const MODE = process.env.NODE_ENV || "development";
 const PORT = 3001;
-const lib_name = 'react-query-builder-antd-input';
+const lib_name = 'react-query-builder-antd';
 const isProd = (MODE != "development");
 const isDev = (MODE == "development");
 const isAnalyze = process.env.ANALYZE == "1";
