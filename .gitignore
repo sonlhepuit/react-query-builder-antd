@@ -1,7 +1,8 @@
 node_modules
 lib
 *package-lock*
-scripts/
+scripts/*
+!scripts/check-package-content.js
 *.log
 yarn-error.log
 yarn-debug.log*

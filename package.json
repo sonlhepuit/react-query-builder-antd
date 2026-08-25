@@ -1,7 +1,7 @@
 {
-  "name": "react-query-builder-antd-input",
-  "version": "1.2.1",
-  "description": "User-friendly query builder for React. Please migrate to new @react-query-builder-antd-input/* See https://github.com/sonlhepuit/react-query-builder-antd",
+  "name": "react-query-builder-antd",
+  "version": "1.1.0",
+  "description": "See https://github.com/sonlhepuit/react-query-builder-antd",
   "keywords": [
     "query-builder",
     "query",
@@ -27,11 +27,17 @@
   ],
   "main": "lib",
   "types": "modules/index.d.ts",
+  "files": [
+    "lib/",
+    "modules/",
+    "css/"
+  ],
   "scripts": {
     "prepare": "npm run build-npm",
     "for-npm": "sh ./scripts/for-npm.sh",
     "for-gpr": "sh ./scripts/for-gpr.sh",
     "build-npm": "sh ./scripts/build-npm.sh",
+    "check-package": "node ./scripts/check-package-content.js",
     "check-hot": "node ./scripts/check-hot.js",
     "build-global": "NODE_ENV=production COMPRESS=1 webpack",
     "build": "npm run build-npm && npm run build-global",
@@ -72,7 +78,7 @@
   "bugs": {
     "url": "https://github.com/sonlhepuit/react-query-builder-antd/issues"
   },
-  "homepage": "https://github.com/BigFor4/react-query-builder-antd",
+  "homepage": "https://github.com/sonlhepuit/react-query-builder-antd",
   "funding": "https://opencollective.com/react-query-builder-antd",
   "engines": {
     "node": ">=12.13",
