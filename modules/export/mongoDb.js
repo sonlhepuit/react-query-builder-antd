@@ -107,7 +107,6 @@ const formatGroup = (parents, item, config, meta, _not = false, _canWrapExpr = t
           if (acc[k] == undefined) {
             acc[k] = rule[k];
           } else {
-            // https://github.com/BigFor4/react-query-builder-antd-input/issues/182
             let prev = acc[k], next = rule[k];
             if (!isObject(prev)) {
               prev = {"$eq": prev};

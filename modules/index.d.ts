@@ -11,6 +11,14 @@ import {ElementType, ReactElement, Factory} from "react";
 type AnyObject = object;
 type Empty = null | undefined;
 
+export enum DataType {
+  IFC = "IFC",
+  XML = "XML",
+  THREE_D_TILE = "3DTile",
+}
+
+export const DATA_TYPE_OPTIONS: ReadonlyArray<DataType>;
+
 type IdPath = Array<string> | ImmutableList<string>;
 
 type Optional<T> = {
@@ -205,6 +213,7 @@ export interface BuilderProps {
   config: Config,
   actions: Actions,
   dispatch: Dispatch,
+  typeModelOptions?: ReadonlyArray<DataType>,
 }
 
 export interface ItemBuilderProps {
@@ -778,13 +787,9 @@ export interface LocaleSettings {
     mui?: Object,
   },
   valueLabel?: string,
-  valuePlaceholder?: string,
   fieldLabel?: string,
   operatorLabel?: string,
-  fieldPlaceholder?: string,
-  funcPlaceholder?: string,
   funcLabel?: string,
-  operatorPlaceholder?: string,
   lockLabel?: string,
   lockedLabel?: string,
   deleteLabel?: string,
@@ -809,6 +814,25 @@ export interface LocaleSettings {
     okType?: string,
     cancelText?: string,
   },
+  typeOptions:{
+    attribute: string,
+    folder: string,
+    dataType: string,
+    dataTree: string,
+  },
+  placeholders?: {
+    fieldSelectPlaceholder?: string,
+    valuePlaceholder?: string,
+    fieldPlaceholder?: string,
+    funcPlaceholder?: string,
+    operatorPlaceholder?: string,
+  }
+  treeModal?: {
+    title?: string,
+    okText?: string,
+    okType?: string,
+    cancelText?: string,
+  }
 }
 
 export interface RenderSettings {

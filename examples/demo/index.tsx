@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   Query, Builder, Utils,
-  ImmutableTree, Config, BuilderProps, JsonTree, ActionMeta, Actions
+  ImmutableTree, Config, BuilderProps, JsonTree, ActionMeta, Actions, DataType
 } from "react-query-builder-antd-input";
 import throttle from "lodash/throttle";
 import loadConfig from "./config";
@@ -91,6 +91,8 @@ const DemoQueryBuilder: React.FC = () => {
           <Builder {...bprops}
             searchObject={searchObject}
             treeProject={treeProject}
+            typeModelOptions={[DataType.IFC, DataType.XML, DataType.THREE_D_TILE]}
+            modeQueryOptions={['attribute', 'folder', 'dataType']}
           />
         </div>
       </div>
@@ -132,7 +134,7 @@ const DemoQueryBuilder: React.FC = () => {
       }, {
         headers: {
           Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1OGQzNTgyYzllNDNmMDAxMmEyMWQ0YSIsImlhdCI6MTcwMzc1MzE2MiwiZXhwIjoxNzA2MzQ1MTYyfQ.lBphR-qdLuJTS11x3Pi4mkefZW-oNN7NWFSy9yzZ1AM",
+            "Bearer eyJhbGciMzQ1MTYyfQ.lBphR-qdLuJTS11x3Pi4mkefZW-oNN7NWFSy9yzZ1AM",
         },
       });
       if (response.data) {
