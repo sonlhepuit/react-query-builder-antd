@@ -17,7 +17,9 @@ const createSortableContainer = (Builder, CanMoveFn = null) =>
       tree: PropTypes.any.isRequired,
       actions: PropTypes.object.isRequired,
       searchObject: PropTypes.func,
-      treeProject: PropTypes.object,
+      typeModelOptions: PropTypes.array,
+      modeQueryOptions: PropTypes.array,
+      treeProject: PropTypes.array,
     };
 
     constructor(props) {

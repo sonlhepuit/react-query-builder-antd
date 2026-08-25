@@ -3,13 +3,12 @@ import { Tooltip, Select, Input, Spin, Button, Tree, Modal, Empty } from "antd";
 import { BUILT_IN_PLACEMENTS } from "../../../../utils/domUtils";
 import PropTypes, { array } from "prop-types";
 import debounce from 'lodash/debounce';
+import { DATA_TYPE_OPTIONS } from "../../../../constants";
 const { Option, OptGroup } = Select;
 const { DirectoryTree } = Tree
-
 const isModel = (node) => {
   return !node ? false : (node && node.modelId) ? true : false;
 }
-
 const traversalTree = (data, parentKey) => {
   return data.map(item => {
     if (item.children) {
@@ -43,12 +42,14 @@ export default class FieldSelect extends PureComponent {
     readonly: PropTypes.bool,
     setField: PropTypes.func.isRequired,
     searchObject: PropTypes.func,
+    typeModelOptions: PropTypes.array,
+    modeQueryOptions: PropTypes.array,
     isValue: PropTypes.bool,
     arrayModel: PropTypes.array,
-    treeProject: PropTypes.object,
+    dataType: PropTypes.string,
+    treeProject: PropTypes.array,
     typeData: PropTypes.string
   };
-
   state = {
     listProjectOption: [],
     lastFetchId: 0,
@@ -59,24 +60,27 @@ export default class FieldSelect extends PureComponent {
     modelVisible: false,
     checkedNodes: Array.isArray(this.props.arrayModel) ? this.props.arrayModel : [],
     checkedNodesOld: Array.isArray(this.props.arrayModel) ? this.props.arrayModel : [],
+    dataTypeSelected: this.props.dataType || '',
   };
   onChange = (value) => {
     if (this.props.isValue === 'attribute' || this.props.isValue === 'operator') {
       this.props.setField(value);
     } else {
-      this.props.setField({ value, type: this.props.isValue, arrayModel: this.state.checkedNodes});
+      this.props.setField({ value, type: this.props.isValue, arrayModel: this.state.checkedNodes, dataType: this.state.dataTypeSelected });
     }
   };
-
+  onChangeDataType = (value) => {
+    this.setState({ dataTypeSelected: value });
+    this.props.setField({ value: this.props.selectedKey, type: this.props.isValue, arrayModel: this.state.checkedNodes, dataType: value });
+  }
   onChangeInput = (e) => {
     const value = e.target.value;
     if (this.props.isValue === 'attribute' || this.props.isValue === 'operator') {
       this.props.setField(value);
     } else {
-      this.props.setField({ value, type: this.props.isValue, arrayModel: this.state.checkedNodes });
+      this.props.setField({ value, type: this.props.isValue, arrayModel: this.state.checkedNodes, dataType: this.state.dataTypeSelected });
     }
   };
-
   filterOption = (input, option) => {
     const dataForFilter = option;
     const keysForFilter = ["title", "value", "grouplabel", "label"];
@@ -85,7 +89,6 @@ export default class FieldSelect extends PureComponent {
       .join("\0");
     return valueForFilter.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
-
   handleSearchObjectInfo = debounce(async (value) => {
     this.setState({ listProjectOption: [], fetching: true, searchValue: value || null });
     this.props.setField(value);
@@ -103,7 +106,6 @@ export default class FieldSelect extends PureComponent {
       }
     }
   }, 500);
-
   splitAtFirstSpecialCharacter = (str, character) => {
     if (!str) return [];
     var i = str.indexOf(character);
@@ -111,17 +113,14 @@ export default class FieldSelect extends PureComponent {
       return [str.substring(0, i), str.substring(i + 1)];
     } else return [str];
   };
-
   splitTextObjectInfo = (text) => {
     const value = this.splitAtFirstSpecialCharacter(text, '=');
     return value ? value[0] : '';
   };
-
   getObjectInfoV2Label(inf) {
     let value = '';
-    const regexA = /^(.*)=/; 
-    const regexB = /"label":"(.*?)"/; 
-
+    const regexA = /^(.*)=/;
+    const regexB = /"label":"(.*?)"/;
     let match = inf.match(regexA);
     if (match && match[1]) {
       value = match[1].trim();
@@ -133,31 +132,28 @@ export default class FieldSelect extends PureComponent {
     }
     return value;
   }
-
   handleClick = () => {
     this.setState((prevState) => ({ dropdown: !prevState.dropdown }));
   };
   onCheck = (checkedKeys) => {
     this.setState({ checkedNodes: checkedKeys })
   }
-
   onClickHideShowModal = (data) => {
     this.setState({ modelVisible: data })
   }
-
   onOk = () => {
     this.setState({ checkedNodesOld: this.state.checkedNodes })
-    this.props.setField({ value: this.props.selectedKey, type: this.props.isValue, arrayModel: this.state.checkedNodes});
+    this.props.setField({ value: this.props.selectedKey, type: this.props.isValue, arrayModel: this.state.checkedNodes });
     this.onClickHideShowModal(false)
   }
-
   render() {
     const {
       config, customProps, items, placeholder,
       selectedKey, selectedLabel, selectedAltLabel, selectedFullLabel, readonly,
-      isValue, treeProject,
+      isValue, treeProject, typeModelOptions, modeQueryOptions,
       typeData
     } = this.props;
+    const { typeOptions, placeholders, treeModal } = config.settings;
     const dropdownPlacement = config.settings.dropdownPlacement;
     const dropdownAlign = dropdownPlacement ? BUILT_IN_PLACEMENTS[dropdownPlacement] : undefined;
     let tooltipText = selectedAltLabel || selectedFullLabel;
@@ -174,24 +170,45 @@ export default class FieldSelect extends PureComponent {
               dropdownAlign={dropdownAlign}
               dropdownMatchSelectWidth={false}
               style={{ width: 100, marginLeft: 10 }}
-              placeholder={'Type'}
+              placeholder={placeholders.fieldSelectPlaceholder}
               onChange={this.onChange}
               value={typeof selectedKey === 'string' ? selectedKey : undefined}
               filterOption={this.filterOption}
               disabled={readonly}
               {...customProps}
             >
-              <Option label={'Attribute'} key={'attribute'} value={'attribute'}>
-                Attribute
-              </Option>
-              <Option label={'Folder'} key={'folder'} value={'folder'}>
-                Folder
-              </Option>
+              {
+                modeQueryOptions.map((option) => {
+                  return <Option label={typeOptions[option]} key={option} value={option}>
+                    {typeOptions[option]}
+                  </Option>
+                })
+              }
             </Select>
             {
               typeData === 'folder' && (<Button style={{ marginLeft: 10 }} onClick={() => this.onClickHideShowModal(true)}>
-                Data tree
+                {typeOptions.dataTree}
               </Button>)
+            }
+            {
+              typeData === 'dataType' && (<Select
+                dropdownAlign={dropdownAlign}
+                dropdownMatchSelectWidth={false}
+                style={{ width: 150, marginLeft: 10 }}
+                onChange={this.onChangeDataType}
+                value={this.state.dataTypeSelected}
+                filterOption={this.filterOption}
+                disabled={readonly}
+                {...customProps}
+              >
+                {
+                  (typeModelOptions || DATA_TYPE_OPTIONS).map((option) => {
+                    return <Option label={option} key={option} value={option}>
+                      {option}
+                    </Option>
+                  })
+                }
+              </Select>)
             }
           </>
         );
@@ -217,7 +234,7 @@ export default class FieldSelect extends PureComponent {
         res = typeData !== 'folder' && (
           <Input
             style={{ width: 150, marginLeft: 10 }}
-            placeholder={'Value'}
+            placeholder={placeholders.valuePlaceholder}
             onChange={this.onChangeInput}
             value={typeof selectedKey === 'string' ? selectedKey : undefined}
             disabled={readonly}
@@ -225,7 +242,6 @@ export default class FieldSelect extends PureComponent {
           />
         );
         break;
-
       case isValue === 'attribute':
         res = typeData !== 'folder' && (
           <Select
@@ -235,7 +251,7 @@ export default class FieldSelect extends PureComponent {
             showSearch
             value={typeof selectedKey === 'string' ? selectedKey : undefined}
             optionFilterProp="children"
-            placeholder={'Attribute'}
+            placeholder={placeholders.fieldPlaceholder}
             notFoundContent={this.state.fetching ? <Spin size="small" /> : null}
             filterOption={false}
             onChange={this.onChange}
@@ -270,7 +286,7 @@ export default class FieldSelect extends PureComponent {
     return <div>
       {res}
       <Modal
-        title="Select 4D Node in Data Tree"
+        title={treeModal.title}
         centered
         zIndex={10001}
         visible={this.state.modelVisible}
@@ -279,6 +295,8 @@ export default class FieldSelect extends PureComponent {
           this.onClickHideShowModal(false)
           this.setState({ checkedNodes: this.state.checkedNodesOld })
         }}
+        okText={treeModal.okText}
+        cancelText={treeModal.cancelText}
         onOk={() => this.onOk()}
         style={{
           maxHeight: 'calc(100vh - 20px)',
@@ -302,7 +320,6 @@ export default class FieldSelect extends PureComponent {
       </Modal>
     </div>;
   }
-
   renderSelectItems(fields, level = 0) {
     return fields?.map(field => {
       const { items, key, path, label, fullLabel, altLabel, tooltip, grouplabel, disabled } = field;
